@@ -21,7 +21,7 @@ min_height = 240
 running = 1
 kokichi = Character(pos=(20, 240), image="resources/pics/kokichi.png",name="Kokichi", rangec=[0, min_height, width - 50, max_height])
 kaito = Character(pos=(600, 230), image="resources/pics/luminary_of_the_stars.png", name="Kaito", color=(149, 38, 171))
-background = pygame.image.load("resources/pics/hallway.png")
+school_background = pygame.image.load("resources/pics/hallway.png")
 
 event_dict = dict([
         (K_UP, Movements.UP.value),

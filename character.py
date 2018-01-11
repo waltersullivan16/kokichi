@@ -2,6 +2,7 @@ import pygame
 from dialogue_box import DialogueBox
 from dialogues.base import dialog_list
 from game_object import GameObject
+from drawing import school_graphic
 
 def valid_pos(p, r):
     x, y = p
@@ -45,23 +46,24 @@ class Character(GameObject):
         if (y >= self.rangec[1]):
             self.jumping = 0
 
-    def turn(self):
-        self.image = pygame.transform.flip(self.image, True, False)
-        self.dir = -self.dir
+    def turn(self, direction):
+        if self.dir != direction:
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.dir = -self.dir
 
     def walk(self, direction):
-        if (self.dir != direction):
-            self.turn()
+        self.turn(direction)
         x, y = self.pos
         x += self.walk_dist * direction * (self.running + 1)
         if (valid_pos((x, y), self.rangec)):
             self.pos = (x, y)
 
-    def talk(self, screen):
+    def talk(self, screen, character):
+        self.turn(-character.dir)
+        school_graphic(screen)
         dialogue = DialogueBox(text=self.dialogues[self.dialogue_index], color=self.color)
         self.dialogue_index += 1
         dialogue.show(screen)
-        pygame.display.flip()
         while 1:
             pass
 

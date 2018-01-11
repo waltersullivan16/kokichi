@@ -19,6 +19,7 @@ class DialogueBox(GameObject):
                 alpha=self.alpha)
         screen.blit(rounded_rectangle.rectangle, (self.rangec[2], self.rangec[3]))
         Text(text=self.text, position=(self.rangec[2] + 10, self.rangec[3])).show(screen)
+        pygame.display.flip()
 
 class RoundedRect(GameObject):
     def __init__(self, **kwargs):
