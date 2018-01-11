@@ -1,3 +1,3 @@
 kaito_dialogues = [
-"Siema"
-        ]
+    ["Siema", "Bombi"]
+]

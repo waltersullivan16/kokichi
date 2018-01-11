@@ -3,6 +3,7 @@ from dialogue_box import DialogueBox
 from dialogues.base import dialog_list
 from game_object import GameObject
 from drawing import school_graphic
+from base import Movements, event_dict
 
 def valid_pos(p, r):
     x, y = p
@@ -60,13 +61,20 @@ class Character(GameObject):
 
     def talk(self, screen, character):
         self.turn(-character.dir)
-        school_graphic(screen)
-        dialogue = DialogueBox(text=self.dialogues[self.dialogue_index], color=self.color)
-        self.dialogue_index += 1
-        dialogue.show(screen)
-        while 1:
-            pass
+        if self.dialogue_index < len(self.dialogues):
+            for text in self.dialogues[self.dialogue_index]:
+                school_graphic(screen)
+                dialogue = DialogueBox(text=text, color=self.color)
+                dialogue.show(screen)
+                wait_for_action()
+            self.dialogue_index += 1
 
     def collision(self, character):
         return self.get_rect().colliderect(character.get_rect())
 
+
+def wait_for_action():
+    while 1:
+        for event in pygame.event.get():
+            if (event.type == pygame.KEYDOWN and event_dict.get(event.key, 'not_handled') == Movements.JUMP.value):
+                return

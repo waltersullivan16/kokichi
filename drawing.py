@@ -8,5 +8,6 @@ def graphic(screen, characters, background):
     pygame.display.flip()
 
 def school_graphic(screen):
-    from base import school_background, kokichi, kaito
+    from base import school_background
+    from characters import kokichi, kaito
     graphic(screen, [kokichi, kaito], school_background)
