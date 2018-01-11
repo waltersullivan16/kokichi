@@ -1,0 +1,3 @@
+kaito_dialogues = [
+"Siema"
+        ]
