@@ -2,8 +2,7 @@ import pygame
 from dialogue_box import DialogueBox
 from dialogues.base import dialog_list
 from game_object import GameObject
-from drawing import school_graphic
-from base import Movements, event_dict
+from base import Movements, event_dict, width
 
 def valid_pos(p, r):
     x, y = p
@@ -24,9 +23,9 @@ class Character(GameObject):
         self.image = pygame.image.load(self.image)
         self.jumping = 0
         self.running = 0
-        self.dialogue_index = 0
+        self.dialogue_index = -1
         self.dialogues = dialog_list.get(self.name, ["I do not have anything to say :("])
-
+        self.wait = False
 
     def get_rect(self):
         rect = self.image.get_rect()
@@ -59,22 +58,16 @@ class Character(GameObject):
         if (valid_pos((x, y), self.rangec)):
             self.pos = (x, y)
 
-    def talk(self, screen, character):
+    def talk(self, screen, character, chapter):
         self.turn(-character.dir)
-        if self.dialogue_index < len(self.dialogues):
-            for text in self.dialogues[self.dialogue_index]:
-                school_graphic(screen)
-                dialogue = DialogueBox(text=text, color=self.color)
-                dialogue.show(screen)
-                wait_for_action()
-            self.dialogue_index += 1
+        r = self.get_rect()
+        chapter.special_event = self.dialogue_index < len(self.dialogues[chapter.time][0])
+        if chapter.special_event:
+            text = self.dialogues[chapter.time][0][self.dialogue_index]
+        else:
+            text = self.dialogues[chapter.time][1][0]
+        return (DialogueBox(text=text, color=self.color, rangec=(len(text) * 13, 40, min(r.x - 40, width - len(text) * 15)  , r.y - 70)), chapter)
 
     def collision(self, character):
         return self.get_rect().colliderect(character.get_rect())
 
-
-def wait_for_action():
-    while 1:
-        for event in pygame.event.get():
-            if (event.type == pygame.KEYDOWN and event_dict.get(event.key, 'not_handled') == Movements.JUMP.value):
-                return

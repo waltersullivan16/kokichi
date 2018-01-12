@@ -1,13 +1,18 @@
 import pygame
 
-def graphic(screen, characters, background):
-    screen.fill(0)
-    screen.blit(background, (0, 0))
-    for character in characters:
-        character.show(screen)
-    pygame.display.flip()
+class Drawer(object):
+    def __init__(self, **kwargs):
+        pass
 
-def school_graphic(screen):
-    from base import school_background
-    from characters import kokichi, kaito
-    graphic(screen, [kokichi, kaito], school_background)
+    def graphic(self, screen, objects, background):
+        screen.fill(0)
+        screen.blit(background, (0, 0))
+        for o in objects:
+            if o:
+                o.show(screen)
+        pygame.display.flip()
+
+    def school_graphic(self, screen, extra):
+        from base import school_background
+        from characters import kokichi, kaito
+        self.graphic(screen, [kokichi, kaito] + extra, school_background)
