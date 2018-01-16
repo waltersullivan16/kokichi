@@ -2,7 +2,7 @@ import pygame
 from dialogue_box import DialogueBox
 from dialogues.base import dialog_list
 from game_object import GameObject
-from base import Movements, event_dict, width
+from base import width
 
 def valid_pos(p, r):
     x, y = p
@@ -23,9 +23,9 @@ class Character(GameObject):
         self.image = pygame.image.load(self.image)
         self.jumping = 0
         self.running = 0
-        self.dialogue_index = -1
+        self.dialogue_index = 0
         self.dialogues = dialog_list.get(self.name, ["I do not have anything to say :("])
-        self.wait = False
+        self.talked = False
 
     def get_rect(self):
         rect = self.image.get_rect()
@@ -59,14 +59,17 @@ class Character(GameObject):
             self.pos = (x, y)
 
     def talk(self, screen, character, chapter):
+        chapter.special_event = True
+        chapter.wait = True
         self.turn(-character.dir)
-        r = self.get_rect()
-        chapter.special_event = self.dialogue_index < len(self.dialogues[chapter.time][0])
-        if chapter.special_event:
-            text = self.dialogues[chapter.time][0][self.dialogue_index]
-        else:
-            text = self.dialogues[chapter.time][1][0]
-        return (DialogueBox(text=text, color=self.color, rangec=(len(text) * 13, 40, min(r.x - 40, width - len(text) * 15)  , r.y - 70)), chapter)
+        if (chapter.dialogue_index) >= len(self.dialogues[chapter.time][int(self.talked)]):
+            chapter.special_event = False
+            chapter.dialogue_index = 0
+            self.talked = True
+            return (None, chapter)
+        text = self.dialogues[chapter.time][int(self.talked)][int(not self.talked) * chapter.dialogue_index]
+        chapter.dialogue_index += 1
+        return (DialogueBox(text=text, color=self.color, rangec=(len(text) * 13, 40, min(self.get_rect().x - 40, width - len(text) * 15)  , self.get_rect().y - 70)), chapter)
 
     def collision(self, character):
         return self.get_rect().colliderect(character.get_rect())

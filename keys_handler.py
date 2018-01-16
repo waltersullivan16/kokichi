@@ -12,7 +12,8 @@ def clean_keys():
 def event_handler(screen, extra, chapter):
     for event in pygame.event.get():
         if event.type in event_types:
-            kokichi.wait = False
+            print(event)
+            chapter.wait = False
             key = event_dict.get(event.key, 'not_handled')
             keys[key] = int(event.type == pygame.KEYDOWN)
     return handle_keys(screen, extra, chapter)
@@ -21,11 +22,10 @@ def event_handler(screen, extra, chapter):
 def handle_keys(screen, extra, chapter):
     if kokichi.collision(kaito):
         if chapter.special_event or keys[Movements.JUMP.value]:
-            if keys[Movements.JUMP.value] and not kokichi.wait:
-                kaito.dialogue_index += 1
-                kokichi.wait = True
+            print(chapter.special_event)
+            if keys[Movements.JUMP.value] and not chapter.wait:
                 dialog, chapter = kaito.talk(screen, kokichi, chapter)
-                return [dialog]
+                return ([dialog] if dialog else [])
             return extra
         extra = [TriviaText(text="To talk press SPACE")]
     else:
