@@ -20,7 +20,7 @@ def event_handler(screen, extra, chapter):
 
 
 def handle_keys(screen, extra, chapter):
-    if kokichi.collision(kaito):
+    if pygame.sprite.collide_rect(kokichi, kaito):
         if chapter.special_event or keys[Movements.JUMP.value]:
             print(chapter.special_event)
             if keys[Movements.JUMP.value] and not chapter.wait:
